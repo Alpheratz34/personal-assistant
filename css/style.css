@@ -314,3 +314,53 @@ input[type="text"] {
     border-radius: 10px;
     border-left: 3px solid var(--azul-nebulosa);
 }
+
+/* --- STATS personales --- */
+.stats-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.input-field {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.input-field input {
+    width: 80px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--borde-cristal);
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+#btn-registrar-stats {
+    background: var(--purpura-ia);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+#btn-registrar-stats:hover {
+    filter: brightness(1.2);
+    box-shadow: 0 0 15px var(--purpura-ia);
+}
+
+.enlace-espacial {
+    margin-top: auto;
+    font-size: 0.75rem;
+    color: var(--azul-nebulosa);
+    text-decoration: none;
+    text-align: center;
+    padding-top: 15px;
+    border-top: 1px solid var(--borde-cristal);
+}

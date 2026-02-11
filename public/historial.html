@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Archivo Histórico de Misión</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: var(--cristal); }
+        th, td { padding: 15px; border: 1px solid var(--borde-cristal); text-align: center; }
+        th { color: var(--azul-nebulosa); }
+        .btn-volver { display: inline-block; margin-bottom: 20px; color: white; text-decoration: none; background: var(--purpura-ia); padding: 10px 20px; border-radius: 10px; }
+    </style>
+</head>
+<body>
+    <div class="nebulosa n1"></div>
+    <header><h1>Historial de Bitácora</h1></header>
+    <main style="display: block; max-width: 800px;">
+        <a href="index.html" class="btn-volver">← VOLVER AL PUENTE DE MANDO</a>
+        <section>
+            <h2>Registros Pasados</h2>
+            <table id="tabla-historial">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Estudio (h)</th>
+                        <th>Ejercicio (min)</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
+    </main>
+
+    <script>
+        const tabla = document.getElementById('tabla-historial').getElementsByTagName('tbody')[0];
+        const historial = JSON.parse(localStorage.getItem('historialEspacial')) || {};
+
+        Object.keys(historial).reverse().forEach(fecha => {
+            let fila = tabla.insertRow();
+            fila.insertCell(0).innerText = fecha;
+            fila.insertCell(1).innerText = historial[fecha].estudio + " h";
+            fila.insertCell(2).innerText = historial[fecha].ejercicio + " min";
+        });
+    </script>
+</body>
+</html>

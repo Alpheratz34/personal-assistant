@@ -53,6 +53,26 @@
             <button id="btn-voz">Hablar</button>
             <p id="respuesta-voz"></p>
         </section>
+
+        <section id="estadisticas">
+            <!-- estadisticas personales-->
+        <h2>Bitácora de Misión</h2>
+        <div class="stats-input-group">
+        <div class="input-field">
+            <label>Estudio (horas)</label>
+            <input type="number" id="input-estudio" step="0.5" min="0" placeholder="0">
+        </div>
+        <div class="input-field">
+            <label>Ejercicio (min)</label>
+            <input type="number" id="input-ejercicio" step="5" min="0" placeholder="0">
+        </div>
+        <button id="btn-registrar-stats">REGISTRAR JORNADA</button>
+    
+        <div id="resumen-hoy">
+        <p>Hoy: <span id="hoy-estudio">0</span>h estudio | <span id="hoy-ejercicio">0</span>m gym</p>
+        </div>
+        <a href="historial.html" class="enlace-espacial">ACCEDER AL ARCHIVO HISTÓRICO →</a>
+        </section>
     </main>
 
     <script src="js/reloj.js"></script>
