@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistente personal</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="nebulosa n1"></div>
+    <div class="nebulosa n2"></div>
+    <div class="nebulosa n3"></div>
+    <div id="cursor-glow"></div>
+    <div class="estrellas-cruz"></div> <div id="cursor-glow"></div>
+
+    <header>
+        <h1>Asistente Personal</h1>
+    </header>
+
+    <main>
+        <section id="reloj">
+            <p id="saludo"></p>
+            <p id="hora"></p>
+            <p id="fecha"></p>
+        </section>
+
+        <section id="tiempo">
+            <h2>Tiempo</h2>
+            <div id="ciudades"></div>
+        </section>
+
+        <section id="todo">
+            <div class="header-container">
+                <h2>To-Do List</h2>
+                <div class="stats-container">
+                    <span id="porcentaje-numero">0%</span>
+                    <div id="barra-progreso-fondo">
+                        <div id="barra-progreso-relleno"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <input type="text" id="nueva-tarea" placeholder="¿Qué hay que hacer?">
+                <button id="btn-agregar">Añadir</button>
+            </div>
+
+            <ul id="lista-tareas"></ul>
+        </section>
+
+        <section id="voz">
+            <h2>Asistente de voz</h2>
+            <button id="btn-voz">Hablar</button>
+            <p id="respuesta-voz"></p>
+        </section>
+    </main>
+
+    <script src="js/reloj.js"></script>
+    <script src="js/tiempo.js"></script>
+    <script src="js/todolist.js"></script>
+    <script src="js/voz.js"></script>
+</body>
+</html>
