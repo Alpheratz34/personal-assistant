@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Historial - Asistente Espacial</title>
+    <link rel="stylesheet" href="../css/historial.css">
+</head>
+<body>
+    <div class="nebulosa n1"></div>
+    <div class="nebulosa n2"></div>
+
+    <header>
+        <h1>Gestión de Registros</h1>
+    </header>
+
+    <main>
+        <div class="nav-container">
+            <a href="../index.html" class="btn-volver">← VOLVER AL PANEL</a>
+        </div>
+
+        <section style="margin-bottom: 30px;">
+            <h2>Añadir o Modificar Registro</h2>
+            <div class="stats-input-group" style="display: flex; gap: 15px; flex-wrap: wrap; align-items: flex-end;">
+                <div class="input-field">
+                    <label>Fecha</label>
+                    <input type="date" id="input-fecha-historial">
+                </div>
+                <div class="input-field">
+                    <label>Estudio (h)</label>
+                    <input type="number" id="input-estudio-historial" step="0.5" placeholder="0">
+                </div>
+                <div class="input-field">
+                    <label>Ejercicio (h)</label>
+                    <input type="number" id="input-ejercicio-historial" step="0.5" placeholder="0">
+                </div>
+                <button id="btn-guardar-historial" class="btn-volver" style="background: var(--purpura-ia); margin-bottom: 0;">GUARDAR REGISTRO</button>
+            </div>
+        </section>
+
+        <section>
+            <h2>Historial Completo</h2>
+            <div class="tabla-contenedor">
+                <table id="tabla-historial">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Estudio</th>
+                            <th>Ejercicio</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const tabla = document.querySelector('#tabla-historial tbody');
+        const btnGuardar = document.getElementById('btn-guardar-historial');
+
+
+    // Función para cargar la tabla
+    function cargarHistorial() {
+        tabla.innerHTML = "";
+        const historial = JSON.parse(localStorage.getItem('historialEspacial')) || {};
+    
+        // ORDENAR: De más viejo a más joven (Cronológico Ascendente)
+        const fechasOrdenadas = Object.keys(historial).sort((a, b) => {
+            const [d1, m1, y1] = a.split('/');
+            const [d2, m2, y2] = b.split('/');
+            // Invertimos el orden: antes era (b - a), ahora es (a - b)
+            return new Date(y1, m1-1, d1) - new Date(y2, m2-1, d2);
+        });
+
+        if (fechasOrdenadas.length === 0) {
+            tabla.innerHTML = `<tr><td colspan="4" style="padding: 40px; opacity: 0.5;">No hay datos en el archivo.</td></tr>`;
+            return;
+        }
+
+        fechasOrdenadas.forEach(fecha => {
+            const fila = document.createElement('tr');
+            fila.innerHTML = `
+                <td>${fecha}</td>
+                <td>${historial[fecha].estudio} h</td>
+                <td>${historial[fecha].ejercicio} min</td>
+                <td>
+                    <button class="btn-accion edit" onclick="prepararEdicion('${fecha}', ${historial[fecha].estudio}, ${historial[fecha].ejercicio})">✏️</button>
+                    <button class="btn-accion delete" onclick="eliminarRegistro('${fecha}')">🗑️</button>
+                </td>
+            `;
+            tabla.appendChild(fila);
+        });
+    }
+        
+
+        // Guardar o Modificar
+        btnGuardar.addEventListener('click', () => {
+            const fechaRaw = document.getElementById('input-fecha-historial').value;
+            const estudio = parseFloat(document.getElementById('input-estudio-historial').value) || 0;
+            const ejercicio = parseFloat(document.getElementById('input-ejercicio-historial').value) || 0;
+
+            if (!fechaRaw) {
+                alert("Selecciona una fecha");
+                return;
+            }
+
+            // Convertir fecha de YYYY-MM-DD a DD/MM/YYYY para que coincida con el index
+            const partes = fechaRaw.split('-');
+            const fechaFormateada = `${partes[2]}/${partes[1]}/${partes[0]}`;
+
+            let historial = JSON.parse(localStorage.getItem('historialEspacial')) || {};
+            
+            // Aquí sobreescribimos (si existe se actualiza, si no se crea)
+            historial[fechaFormateada] = { estudio, ejercicio };
+
+            localStorage.setItem('historialEspacial', JSON.stringify(historial));
+            cargarHistorial();
+            
+            // Limpiar
+            document.getElementById('input-fecha-historial').value = "";
+            document.getElementById('input-estudio-historial').value = "";
+            document.getElementById('input-ejercicio-historial').value = "";
+        });
+
+        function eliminarRegistro(fecha) {
+            if (confirm(`¿Eliminar el registro del ${fecha}?`)) {
+                let historial = JSON.parse(localStorage.getItem('historialEspacial')) || {};
+                delete historial[fecha];
+                localStorage.setItem('historialEspacial', JSON.stringify(historial));
+                cargarHistorial();
+            }
+        }
+
+        function prepararEdicion(fecha, estudio, ejercicio) {
+            // Convertir DD/MM/YYYY de vuelta a YYYY-MM-DD para el input date
+            const partes = fecha.split('/');
+            const fechaInput = `${partes[2]}-${partes[1]}-${partes[0]}`;
+            
+            document.getElementById('input-fecha-historial').value = fechaInput;
+            document.getElementById('input-estudio-historial').value = estudio;
+            document.getElementById('input-ejercicio-historial').value = ejercicio;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        cargarHistorial();
+    </script>
+</body>
+</html>

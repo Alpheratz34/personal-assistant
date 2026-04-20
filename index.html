@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistente Personal</title>
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Librería del calendario (se carga antes del JS que la usa) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+</head>
+<body>
+    <!-- Fondo astronómico -->
+    <div class="nebulosa n1"></div>
+    <div class="nebulosa n2"></div>
+    <div class="nebulosa n3"></div>
+    <div class="estrellas-cruz"></div>
+
+    <header>
+        <h1>Asistente Personal</h1>
+    </header>
+
+    <main>
+
+        <!-- ============ RELOJ ============ -->
+        <section id="reloj">
+            <p id="saludo"></p>
+            <p id="hora"></p>
+            <p id="fecha"></p>
+        </section>
+
+        <!-- ============ TIEMPO ============ -->
+        <section id="tiempo">
+            <h2>Tiempo</h2>
+            <div id="ciudades"></div>
+        </section>
+
+        <!-- ============ TO-DO LIST ============ -->
+        <section id="todo">
+            <div class="header-container">
+                <h2>To-Do List</h2>
+                <div class="stats-container">
+                    <span id="porcentaje-numero">0%</span>
+                    <div id="barra-progreso-fondo">
+                        <div id="barra-progreso-relleno"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <input type="text" id="nueva-tarea" placeholder="¿Qué hay que hacer?">
+                <button id="btn-agregar">Añadir</button>
+            </div>
+
+            <ul id="lista-tareas"></ul>
+        </section>
+
+        <!-- ============ EVENTOS (NUEVO) ============ -->
+        <section id="eventos">
+            <h2>Eventos</h2>
+
+            <!-- Tabs: Hoy / Próximos -->
+            <div class="eventos-tabs">
+                <button class="tab-evento activo" data-tab="hoy">Hoy</button>
+                <button class="tab-evento" data-tab="proximos">Próximos</button>
+            </div>
+
+            <!-- Formulario para añadir evento -->
+            <div class="evento-form">
+                <input type="text" id="evento-titulo" placeholder="Título del evento">
+                <div class="evento-form-fila">
+                    <input type="date" id="evento-fecha">
+                    <input type="time" id="evento-hora">
+                    <button id="btn-agregar-evento">+</button>
+                </div>
+            </div>
+
+            <!-- Lista dinámica -->
+            <ul id="lista-eventos"></ul>
+            <p id="eventos-vacio" class="vacio-msg">No hay eventos.</p>
+        </section>
+
+        <!-- ============ NOTAS PUNTUALES (NUEVO) ============ -->
+        <section id="notas">
+            <h2>Notas Rápidas</h2>
+
+            <div class="input-group">
+                <input type="text" id="nueva-nota" placeholder="Apunta algo rápido...">
+                <button id="btn-agregar-nota">Añadir</button>
+            </div>
+
+            <ul id="lista-notas"></ul>
+            <p id="notas-vacio" class="vacio-msg">Sin notas todavía.</p>
+        </section>
+
+        <!-- ============ ESTADÍSTICAS ============ -->
+        <section id="estadisticas">
+            <h2>Estadísticas</h2>
+            <div class="stats-input-group">
+                <div class="input-field">
+                    <label>Estudio</label>
+                    <input type="number" id="input-estudio" step="0.5" min="0" placeholder="0">
+                </div>
+                <div class="input-field">
+                    <label>Ejercicio</label>
+                    <input type="number" id="input-ejercicio" step="0.5" min="0" placeholder="0">
+                </div>
+            </div>
+            <button id="btn-registrar-stats">REGISTRAR DÍA</button>
+
+            <div id="resumen-hoy">
+                <p>Hoy: <span id="hoy-estudio">0</span>h estudio | <span id="hoy-ejercicio">0</span>h gym</p>
+            </div>
+            <a href="public/historial.html" class="enlace-espacial">HISTORIAL DIARIO →</a>
+        </section>
+
+        <!-- ============ CALENDARIO ============ -->
+        <section id="planificador">
+            <h2>Calendario Diario</h2>
+            <div id="calendar-mini"></div>
+        </section>
+
+        <!-- ============ ASISTENTE DE VOZ (FLOTANTE) ============ -->
+        <section id="voz">
+            <h2>Asistente de voz</h2>
+            <button id="btn-voz" title="Haz clic y dime algo">🎤</button>
+            <p id="respuesta-voz"></p>
+        </section>
+
+        <!-- ============ MÚSICA / SPOTIFY (FLOTANTE) ============ -->
+        <section id="musica">
+            <div class="musica-header">
+                <h2>🎵 Música</h2>
+                <button id="btn-toggle-musica" title="Minimizar/Expandir">—</button>
+            </div>
+
+            <div class="musica-body">
+                <!-- Tabs para elegir fuente -->
+                <div class="musica-tabs">
+                    <button class="tab-musica activo" data-fuente="spotify">Spotify</button>
+                    <button class="tab-musica" data-fuente="local">Local</button>
+                </div>
+
+                <!-- SPOTIFY -->
+                <div class="fuente-musica" id="fuente-spotify">
+                    <div class="spotify-input-group">
+                        <input type="text" id="spotify-url" placeholder="Pega el enlace de Spotify...">
+                        <button id="btn-cargar-spotify">Cargar</button>
+                    </div>
+                    <div id="spotify-sugerencias">
+                        <small>Guardadas:</small>
+                        <div id="lista-playlists"></div>
+                    </div>
+                    <div id="spotify-embed-contenedor">
+                        <p class="placeholder-spotify">
+                            Pega un enlace de una playlist, álbum o canción de Spotify para empezar.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- LOCAL -->
+                <div class="fuente-musica oculto" id="fuente-local">
+                    <div class="reproductor-controles">
+                        <button id="btn-musica">🎵 Reproducir</button>
+                        <input type="range" id="volumen-musica" min="0" max="1" step="0.1" value="0.5">
+                    </div>
+                    <audio id="reproductor-musica" loop>
+                        <source src="musica/tu-cancion.mp3" type="audio/mpeg">
+                        Tu navegador no soporta audio.
+                    </audio>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Scripts (con defer para que el DOM esté listo) -->
+    <script defer src="js/reloj.js"></script>
+    <script defer src="js/tiempo.js"></script>
+    <script defer src="js/todolist.js"></script>
+    <script defer src="js/eventos.js"></script>
+    <script defer src="js/notas.js"></script>
+    <script defer src="js/stats.js"></script>
+    <script defer src="js/calendario.js"></script>
+    <script defer src="js/musica.js"></script>
+    <script defer src="js/voz.js"></script>
+</body>
+</html>
