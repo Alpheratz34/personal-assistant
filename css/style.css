@@ -18,6 +18,64 @@
     box-sizing: border-box;
 }
 
+/* ==========================================================
+   BARRA DE TÍTULO PERSONALIZADA (Electron frameless)
+   ========================================================== */
+#titlebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 32px;
+    background: rgba(7, 4, 15, 0.97);
+    border-bottom: 1px solid rgba(157, 78, 221, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 100000;
+    -webkit-app-region: drag;
+    user-select: none;
+}
+
+#titlebar-drag {
+    flex: 1;
+    padding-left: 14px;
+    font-size: 11px;
+    font-family: 'Space Grotesk', sans-serif;
+    color: rgba(196, 181, 253, 0.45);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+#titlebar-controls {
+    display: flex;
+    -webkit-app-region: no-drag;
+}
+
+.titlebar-btn {
+    width: 46px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: var(--texto-apagado);
+    cursor: pointer;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.12s, color 0.12s;
+}
+
+.titlebar-btn:hover {
+    background: rgba(157, 78, 221, 0.2);
+    color: var(--texto-principal);
+}
+
+.titlebar-btn.close:hover {
+    background: #c0392b;
+    color: #fff;
+}
+
 :root {
     /* Fondos */
     --fondo-profundo:   #07040f;
@@ -82,7 +140,7 @@ body {
     color: var(--texto-principal);
     min-height: 100vh;
     overflow-x: hidden;
-    padding: 20px;
+    padding: 52px 20px 20px;
     position: relative;
     font-weight: 400;
     letter-spacing: 0.01em;

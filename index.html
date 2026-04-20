@@ -10,6 +10,16 @@
     <script defer src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
 </head>
 <body>
+    <!-- Barra de título personalizada (sin frame nativo) -->
+    <div id="titlebar">
+        <div id="titlebar-drag">✦ Asistente Personal</div>
+        <div id="titlebar-controls">
+            <button class="titlebar-btn" id="btn-min"   title="Minimizar">&#x2500;</button>
+            <button class="titlebar-btn" id="btn-max"   title="Maximizar">&#x25A1;</button>
+            <button class="titlebar-btn close" id="btn-close" title="Cerrar">&#x2715;</button>
+        </div>
+    </div>
+
     <!-- Fondo astronómico -->
     <div class="nebulosa n1"></div>
     <div class="nebulosa n2"></div>
@@ -184,5 +194,6 @@
     <script defer src="js/calendario.js"></script>
     <script defer src="js/musica.js"></script>
     <script defer src="js/voz.js"></script>
+    <script defer src="js/titlebar.js"></script>
 </body>
 </html>

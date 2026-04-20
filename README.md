@@ -50,29 +50,10 @@ Haz clic en el botón flotante 🎤 abajo a la izquierda y habla. Ejemplos:
 - Para servirlo, debe ejecutarse desde `http://` o `https://` (no desde `file://`),
   porque los navegadores bloquean el micrófono en archivos locales.
 
-## Cómo hacer funcional Spotify
-
-**Ya funciona sin que tengas que configurar nada.** Solo tienes que:
-
-1. Abrir Spotify (web o app).
-2. Click derecho sobre una playlist → "Compartir" → "Copiar enlace de la playlist".
-3. Pegar el enlace en el input del widget de música → "Cargar".
-
-El reproductor oficial de Spotify aparece incrustado y puedes darle al play.
-
-**Detalles importantes:**
-- Si **no** tienes Premium, Spotify solo te deja oír **~30 segundos** de cada canción
-  (limitación suya, no hay forma de evitarla sin login).
-- Si tienes Premium y estás logueado en Spotify en el mismo navegador, suena completa.
-- Las playlists que cargues se guardan automáticamente como chips para reusarlas.
-- Si quisieras control total desde tu propia UI (play/pause desde TU botón, saber
-  qué canción suena, etc.), necesitarías la **Spotify Web Playback SDK**, que sí
-  requiere registrar una app en https://developer.spotify.com y autenticar con OAuth.
-  Para uso personal, el embed es más que suficiente.
 
 ## Cómo ejecutarlo
 
-### Opción 1: Electron (como ya lo tenías)
+### Opción 1: Electron 
 ```bash
 npm install
 npm start
