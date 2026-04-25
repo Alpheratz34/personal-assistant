@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Asistente Personal</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/estudio.css">
 
     <!-- Librería del calendario (se carga antes del JS que la usa) -->
     <script defer src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
@@ -28,6 +29,7 @@
 
     <header>
         <h1>Asistente Personal</h1>
+        <button id="btn-modo-estudio" class="btn-modo-estudio">📚 Modo Estudio</button>
     </header>
 
     <main>
@@ -130,13 +132,6 @@
             <div id="calendar-mini"></div>
         </section>
 
-        <!-- ============ ASISTENTE DE VOZ (FLOTANTE) ============ -->
-        <section id="voz">
-            <h2>Asistente de voz</h2>
-            <button id="btn-voz" title="Haz clic y dime algo">🎤</button>
-            <p id="respuesta-voz"></p>
-        </section>
-
         <!-- ============ MÚSICA / SPOTIFY (FLOTANTE) ============ -->
         <section id="musica">
             <div class="musica-header">
@@ -184,6 +179,134 @@
 
     </main>
 
+    <!-- ============================================================
+         MODO ESTUDIO – overlay completo sobre el contenido principal
+         ============================================================ -->
+    <div id="modo-estudio" class="modo-estudio-oculto">
+
+        <!-- Header -->
+        <div class="estudio-header">
+            <button id="btn-salir-estudio" class="btn-volver">← Volver</button>
+            <div class="estudio-titulo">
+                <span class="estudio-titulo-dot"></span>
+                Modo Estudio
+            </div>
+            <div class="ambience-controles">
+                <button class="btn-ambience" data-tipo="rain" title="Lluvia y truenos">🌧️ Lluvia</button>
+                <div class="rain-intensity-controls" id="rain-intensity-controls" style="display:none">
+                    <button class="btn-rain-intensity" data-intensidad="suave" title="Lluvia suave">🌦️</button>
+                    <button class="btn-rain-intensity activo" data-intensidad="media" title="Lluvia media">🌧️</button>
+                    <button class="btn-rain-intensity" data-intensidad="fuerte" title="Tormenta fuerte">⛈️</button>
+                </div>
+                <button class="btn-ambience" data-tipo="jazz" title="Jazz tranquilo">🎷 Jazz</button>
+                <button class="btn-ambience activo" data-tipo="none" title="Silencio">🔇 Silencio</button>
+                <input type="range" id="volumen-ambiente" min="0" max="100" value="60" title="Volumen ambiente">
+            </div>
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="estudio-contenido">
+
+            <!-- ── Pomodoro ── -->
+            <section class="pomodoro-widget">
+                <div class="pomodoro-fase-badge" id="pomo-fase">LISTO</div>
+
+                <div class="pomodoro-ring-container">
+                    <svg class="pomodoro-svg" viewBox="0 0 200 200">
+                        <circle class="ring-track"    cx="100" cy="100" r="88"/>
+                        <circle class="ring-progress" cx="100" cy="100" r="88" id="ring-progress"/>
+                    </svg>
+                    <div class="pomodoro-tiempo-display" id="pomo-tiempo">25:00</div>
+                </div>
+
+                <div class="pomodoro-controles">
+                    <button id="pomo-reiniciar" class="btn-pomo btn-reiniciar" title="Reiniciar">↺</button>
+                    <button id="pomo-iniciar"   class="btn-pomo btn-iniciar"   title="Iniciar">▶</button>
+                    <button id="pomo-pausar"    class="btn-pomo btn-pausar"    title="Pausar" disabled>⏸</button>
+                </div>
+
+                <div class="pomodoro-sesiones" id="pomo-sesiones">
+                    Sesiones completadas: <span>0</span>
+                </div>
+
+                <div class="pomodoro-config">
+                    <div class="config-field">
+                        <label>Estudio (min)</label>
+                        <input type="number" id="pomo-min-estudio" value="25" min="1" max="120">
+                    </div>
+                    <div class="config-field">
+                        <label>Descanso (min)</label>
+                        <input type="number" id="pomo-min-descanso" value="5" min="1" max="60">
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── Panel lateral: Tareas + Notas ── -->
+            <div class="estudio-lateral">
+
+                <!-- Tareas -->
+                <section class="estudio-tareas">
+                    <div class="estudio-section-header">
+                        <h2>Tareas</h2>
+                        <span class="estudio-progreso-texto" id="estudio-progreso-texto">0%</span>
+                    </div>
+                    <div class="estudio-barra-progreso">
+                        <div class="estudio-barra-relleno" id="estudio-barra-relleno"></div>
+                    </div>
+                    <div class="input-group estudio-input-group">
+                        <input type="text" id="estudio-nueva-tarea" placeholder="Nueva tarea…">
+                        <button id="estudio-btn-tarea">+</button>
+                    </div>
+                    <ul id="estudio-lista-tareas"></ul>
+                </section>
+
+                <!-- Notas -->
+                <section class="estudio-notas">
+                    <h2>Notas</h2>
+                    <div class="input-group estudio-input-group">
+                        <input type="text" id="estudio-nueva-nota" placeholder="Apunta algo…">
+                        <button id="estudio-btn-nota">+</button>
+                    </div>
+                    <ul id="estudio-lista-notas"></ul>
+                    <p class="vacio-msg" id="estudio-notas-vacio">Sin notas todavía.</p>
+                </section>
+
+            </div><!-- /estudio-lateral -->
+        </div><!-- /estudio-contenido -->
+
+        <!-- ── Overlay de descanso ── -->
+        <div id="descanso-overlay" class="descanso-oculto">
+            <div class="descanso-contenido">
+
+                <div class="descanso-info">
+                    <h3>¡Tiempo de descanso! 🌿</h3>
+                    <div class="descanso-timer" id="descanso-timer">05:00</div>
+                    <p>Estira, cierra los ojos… o elige un juego tranquilo:</p>
+                </div>
+
+                <div class="juegos-selector">
+                    <button class="btn-juego" data-juego="respiracion">
+                        <span class="juego-icono">🫁</span>
+                        <span>Respiración guiada</span>
+                    </button>
+                    <button class="btn-juego" data-juego="memoria">
+                        <span class="juego-icono">🃏</span>
+                        <span>Juego de memoria</span>
+                    </button>
+                    <button class="btn-juego" data-juego="sopaletras">
+                        <span class="juego-icono">🔤</span>
+                        <span>Sopa de letras</span>
+                    </button>
+                </div>
+
+                <div id="area-juego"></div>
+
+                <button id="btn-saltar-descanso" class="btn-saltar">Saltar descanso →</button>
+            </div>
+        </div><!-- /descanso-overlay -->
+
+    </div><!-- /modo-estudio -->
+
     <!-- Scripts (con defer para que el DOM esté listo) -->
     <script defer src="js/reloj.js"></script>
     <script defer src="js/tiempo.js"></script>
@@ -193,7 +316,7 @@
     <script defer src="js/stats.js"></script>
     <script defer src="js/calendario.js"></script>
     <script defer src="js/musica.js"></script>
-    <script defer src="js/voz.js"></script>
     <script defer src="js/titlebar.js"></script>
+    <script defer src="js/estudio.js"></script>
 </body>
 </html>

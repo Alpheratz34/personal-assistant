@@ -120,7 +120,8 @@
             guardarYActualizar();
         },
         contar: () => listaTareas.querySelectorAll('li').length,
-        pendientes: () => listaTareas.querySelectorAll('li:not(.completada)').length
+        pendientes: () => listaTareas.querySelectorAll('li:not(.completada)').length,
+        recargar: cargar
     };
 
     cargar();

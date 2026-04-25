@@ -134,7 +134,8 @@
         ultima: () => {
             const notas = leer().sort((a, b) => b.timestamp - a.timestamp);
             return notas[0] || null;
-        }
+        },
+        render
     };
 
     // --- Listeners ---

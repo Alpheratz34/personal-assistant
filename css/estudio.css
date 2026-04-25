@@ -1,0 +1,1151 @@
+/* ==========================================================
+   MODO ESTUDIO
+   Overlay completo encima del contenido principal.
+   Misma paleta "Nebula Aurora" que style.css.
+   ========================================================== */
+
+/* ── Overlay base ── */
+#modo-estudio {
+    position: fixed;
+    inset: 32px 0 0 0;          /* respeta el titlebar */
+    z-index: 9000;
+    display: flex;
+    flex-direction: column;
+    background: #07040f;
+    overflow: hidden;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+#modo-estudio.modo-estudio-oculto {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(12px);
+}
+
+#modo-estudio.modo-estudio-activo {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateY(0);
+}
+
+/* Fondo propio (más cálido/focus que el principal) */
+#modo-estudio::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse at 15% 20%, rgba(45, 212, 191, 0.12), transparent 55%),
+        radial-gradient(ellipse at 85% 75%, rgba(91, 33, 182, 0.18), transparent 55%),
+        radial-gradient(circle at center, #0d0a1e 0%, #07040f 100%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+#modo-estudio > * { position: relative; z-index: 1; }
+
+/* ── Header ── */
+.estudio-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 24px;
+    border-bottom: 1px solid rgba(199, 125, 255, 0.12);
+    flex-shrink: 0;
+}
+
+.btn-volver {
+    background: transparent;
+    border: 1px solid rgba(199, 125, 255, 0.25);
+    color: var(--texto-suave);
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+    white-space: nowrap;
+}
+
+.btn-volver:hover {
+    border-color: var(--verde-aurora);
+    color: var(--verde-aurora);
+    background: rgba(94, 234, 212, 0.06);
+}
+
+.estudio-titulo {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--morado-vivo);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+
+.estudio-titulo-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--verde-aurora);
+    box-shadow: 0 0 10px var(--verde-aurora);
+    animation: parpadeo-dot 2s infinite ease-in-out;
+}
+
+@keyframes parpadeo-dot {
+    0%, 100% { opacity: 1; box-shadow: 0 0 10px var(--verde-aurora); }
+    50%       { opacity: 0.4; box-shadow: 0 0 4px var(--verde-aurora); }
+}
+
+/* ── Ambience controls ── */
+.ambience-controles {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-ambience {
+    background: transparent;
+    border: 1px solid rgba(199, 125, 255, 0.2);
+    color: var(--texto-apagado);
+    padding: 5px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.78rem;
+    font-family: 'Space Grotesk', sans-serif;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.btn-ambience:hover {
+    border-color: rgba(199, 125, 255, 0.5);
+    color: var(--texto-suave);
+}
+
+.btn-ambience.activo {
+    background: rgba(94, 234, 212, 0.12);
+    border-color: var(--verde-aurora);
+    color: var(--verde-aurora);
+    box-shadow: 0 0 10px rgba(94, 234, 212, 0.2);
+}
+
+#volumen-ambiente {
+    width: 80px;
+    height: 4px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: rgba(199, 125, 255, 0.2);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+}
+
+#volumen-ambiente::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--verde-aurora);
+    box-shadow: 0 0 6px var(--verde-aurora);
+    cursor: pointer;
+}
+
+/* ── Contenido principal ── */
+.estudio-contenido {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    grid-template-rows: 1fr;
+    gap: 0;
+    overflow: hidden;
+    min-height: 0;
+}
+
+/* ============================================================
+   POMODORO WIDGET
+   ============================================================ */
+.pomodoro-widget {
+    border-right: 1px solid rgba(199, 125, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 28px;
+    gap: 14px;
+}
+
+.pomodoro-fase-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    padding: 4px 18px;
+    border-radius: 20px;
+    background: rgba(94, 234, 212, 0.1);
+    border: 1px solid rgba(94, 234, 212, 0.3);
+    color: var(--verde-aurora);
+    transition: all 0.4s ease;
+}
+
+.pomodoro-fase-badge.descanso {
+    background: rgba(247, 37, 133, 0.1);
+    border-color: rgba(247, 37, 133, 0.3);
+    color: var(--rosa-cuasar);
+}
+
+/* Ring SVG */
+.pomodoro-ring-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    flex-shrink: 0;
+}
+
+.pomodoro-svg {
+    width: 200px;
+    height: 200px;
+    transform: rotate(-90deg);
+}
+
+.ring-track {
+    fill: none;
+    stroke: rgba(199, 125, 255, 0.1);
+    stroke-width: 8;
+}
+
+.ring-progress {
+    fill: none;
+    stroke: var(--verde-aurora);
+    stroke-width: 8;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s linear, stroke 0.5s ease;
+    filter: drop-shadow(0 0 8px var(--verde-aurora));
+}
+
+.ring-progress.descanso {
+    stroke: var(--rosa-cuasar);
+    filter: drop-shadow(0 0 8px var(--rosa-cuasar));
+}
+
+.pomodoro-tiempo-display {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 2.6rem;
+    font-weight: 600;
+    color: var(--texto-principal);
+    letter-spacing: 2px;
+    text-shadow: 0 0 30px rgba(157, 78, 221, 0.4);
+}
+
+/* Controls */
+.pomodoro-controles {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.btn-pomo {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid rgba(199, 125, 255, 0.3);
+    background: rgba(0, 0, 0, 0.3);
+    color: var(--texto-suave);
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-pomo:hover:not(:disabled) {
+    background: rgba(94, 234, 212, 0.1);
+    border-color: var(--verde-aurora);
+    color: var(--verde-aurora);
+    box-shadow: 0 0 12px rgba(94, 234, 212, 0.2);
+}
+
+.btn-pomo:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.btn-iniciar {
+    width: 56px;
+    height: 56px;
+    font-size: 1.3rem;
+    background: rgba(94, 234, 212, 0.08);
+    border-color: var(--verde-aurora);
+    color: var(--verde-aurora);
+}
+
+.btn-iniciar:hover:not(:disabled) {
+    background: rgba(94, 234, 212, 0.18);
+    box-shadow: 0 0 20px rgba(94, 234, 212, 0.3);
+    transform: scale(1.05);
+}
+
+/* Session counter */
+.pomodoro-sesiones {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--texto-apagado);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.pomodoro-sesiones span {
+    color: var(--morado-vivo);
+    font-weight: 700;
+}
+
+/* Config inputs */
+.pomodoro-config {
+    display: flex;
+    gap: 16px;
+    padding: 12px 16px;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 12px;
+    border: 1px solid rgba(199, 125, 255, 0.1);
+    width: 100%;
+}
+
+.config-field {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+}
+
+.config-field label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--texto-apagado);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.config-field input[type="number"] {
+    width: 70px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(199, 125, 255, 0.2);
+    border-radius: 8px;
+    padding: 6px 8px;
+    color: var(--texto-principal);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.config-field input[type="number"]:focus {
+    border-color: var(--morado-nebula);
+    box-shadow: 0 0 0 3px rgba(157, 78, 221, 0.1);
+}
+
+/* ============================================================
+   PANEL LATERAL: TAREAS + NOTAS
+   ============================================================ */
+.estudio-lateral {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    overflow: hidden;
+}
+
+.estudio-tareas,
+.estudio-notas {
+    display: flex;
+    flex-direction: column;
+    padding: 18px 22px;
+    gap: 10px;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.estudio-tareas {
+    border-bottom: 1px solid rgba(199, 125, 255, 0.1);
+}
+
+.estudio-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2px;
+}
+
+.estudio-progreso-texto {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--morado-vivo);
+}
+
+.estudio-barra-progreso {
+    height: 4px;
+    background: rgba(0, 0, 0, 0.35);
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid rgba(199, 125, 255, 0.08);
+    flex-shrink: 0;
+}
+
+.estudio-barra-relleno {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--morado-nebula), var(--verde-aurora));
+    border-radius: 4px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Inputs en estudio */
+.estudio-input-group {
+    display: flex;
+    gap: 7px;
+    background: rgba(0, 0, 0, 0.25);
+    padding: 5px;
+    border-radius: 10px;
+    border: 1px solid var(--borde-sutil);
+    transition: border-color 0.3s;
+    flex-shrink: 0;
+    margin-bottom: 0;
+}
+
+.estudio-input-group:focus-within {
+    border-color: var(--morado-nebula);
+    box-shadow: 0 0 0 3px rgba(157, 78, 221, 0.08);
+}
+
+.estudio-input-group input[type="text"] {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 7px 10px;
+    color: var(--texto-principal);
+    font-family: inherit;
+    font-size: 0.88rem;
+    outline: none;
+}
+
+.estudio-input-group input[type="text"]::placeholder { color: var(--texto-apagado); }
+
+.estudio-input-group button {
+    background: var(--grad-principal);
+    color: white;
+    border: none;
+    padding: 0 14px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1;
+    transition: box-shadow 0.2s;
+}
+
+.estudio-input-group button:hover {
+    box-shadow: 0 0 14px rgba(157, 78, 221, 0.4);
+}
+
+/* Lista de tareas en estudio */
+#estudio-lista-tareas {
+    list-style: none;
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.estudio-tarea {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(199, 125, 255, 0.08);
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.estudio-tarea:hover {
+    background: rgba(157, 78, 221, 0.06);
+    border-color: rgba(199, 125, 255, 0.18);
+}
+
+.estudio-tarea.completada span {
+    text-decoration: line-through;
+    color: var(--texto-apagado);
+}
+
+.tarea-check-btn {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(199, 125, 255, 0.35);
+    background: transparent;
+    color: var(--verde-aurora);
+    font-size: 0.7rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+}
+
+.estudio-tarea.completada .tarea-check-btn {
+    background: rgba(94, 234, 212, 0.15);
+    border-color: var(--verde-aurora);
+    box-shadow: 0 0 6px rgba(94, 234, 212, 0.3);
+}
+
+.tarea-check-btn:hover {
+    border-color: var(--verde-aurora);
+    box-shadow: 0 0 8px rgba(94, 234, 212, 0.25);
+}
+
+.estudio-tarea span {
+    flex: 1;
+    font-size: 0.87rem;
+    color: var(--texto-principal);
+    line-height: 1.3;
+}
+
+.tarea-del-btn {
+    background: transparent;
+    border: none;
+    color: var(--texto-apagado);
+    cursor: pointer;
+    font-size: 0.75rem;
+    padding: 2px 5px;
+    border-radius: 4px;
+    transition: color 0.2s, background 0.2s;
+    opacity: 0;
+}
+
+.estudio-tarea:hover .tarea-del-btn { opacity: 1; }
+
+.tarea-del-btn:hover {
+    color: var(--rosa-cuasar);
+    background: rgba(247, 37, 133, 0.1);
+}
+
+/* Lista de notas en estudio */
+#estudio-lista-notas {
+    list-style: none;
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+#estudio-lista-notas li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(199, 125, 255, 0.08);
+    transition: background 0.2s;
+}
+
+#estudio-lista-notas li:hover {
+    background: rgba(157, 78, 221, 0.06);
+}
+
+#estudio-lista-notas .nota-contenido {
+    flex: 1;
+    font-size: 0.87rem;
+    color: var(--texto-principal);
+    line-height: 1.4;
+}
+
+#estudio-lista-notas .nota-fecha {
+    display: block;
+    font-size: 0.68rem;
+    color: var(--texto-apagado);
+    margin-top: 2px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.5px;
+}
+
+#estudio-lista-notas .btn-eliminar {
+    background: transparent;
+    border: none;
+    color: var(--texto-apagado);
+    cursor: pointer;
+    font-size: 0.72rem;
+    padding: 2px 5px;
+    border-radius: 4px;
+    transition: color 0.2s, background 0.2s;
+    flex-shrink: 0;
+    opacity: 0;
+}
+
+#estudio-lista-notas li:hover .btn-eliminar { opacity: 1; }
+
+#estudio-lista-notas .btn-eliminar:hover {
+    color: var(--rosa-cuasar);
+    background: rgba(247, 37, 133, 0.1);
+}
+
+/* ============================================================
+   OVERLAY DE DESCANSO
+   ============================================================ */
+#descanso-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(7, 4, 15, 0.92);
+    backdrop-filter: blur(12px);
+    transition: opacity 0.4s ease;
+}
+
+#descanso-overlay.descanso-oculto {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#descanso-overlay.descanso-visible {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.descanso-contenido {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+    padding: 32px 40px;
+    max-width: 700px;
+    width: 90%;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+}
+
+.descanso-info {
+    text-align: center;
+}
+
+.descanso-info h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: var(--texto-principal);
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+
+.descanso-timer {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 3rem;
+    font-weight: 600;
+    color: var(--rosa-cuasar);
+    text-shadow: 0 0 30px rgba(247, 37, 133, 0.4);
+    letter-spacing: 3px;
+}
+
+.descanso-info p {
+    font-size: 0.85rem;
+    color: var(--texto-apagado);
+    margin-top: 8px;
+}
+
+/* Selector de juegos */
+.juegos-selector {
+    display: flex;
+    gap: 14px;
+}
+
+.btn-juego {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 14px 24px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(199, 125, 255, 0.2);
+    border-radius: 14px;
+    color: var(--texto-suave);
+    cursor: pointer;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.85rem;
+    transition: all 0.25s;
+    min-width: 140px;
+}
+
+.juego-icono {
+    font-size: 1.8rem;
+}
+
+.btn-juego:hover {
+    background: rgba(157, 78, 221, 0.12);
+    border-color: var(--morado-nebula);
+    color: var(--texto-principal);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(91, 33, 182, 0.2);
+}
+
+.btn-juego.activo {
+    background: rgba(94, 234, 212, 0.1);
+    border-color: var(--verde-aurora);
+    color: var(--verde-aurora);
+    box-shadow: 0 0 16px rgba(94, 234, 212, 0.2);
+}
+
+/* Skip button */
+.btn-saltar {
+    background: transparent;
+    border: 1px solid rgba(199, 125, 255, 0.2);
+    color: var(--texto-apagado);
+    padding: 7px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+}
+
+.btn-saltar:hover {
+    border-color: var(--verde-aurora);
+    color: var(--verde-aurora);
+}
+
+/* Área de juegos */
+#area-juego {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ============================================================
+   JUEGO: RESPIRACIÓN GUIADA
+   ============================================================ */
+.respiracion-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 0;
+}
+
+.resp-svg {
+    width: 180px;
+    height: 180px;
+    overflow: visible;
+}
+
+.resp-circle {
+    fill: none;
+    stroke: var(--verde-aurora);
+    stroke-width: 4;
+    transform-origin: 100px 100px;
+    filter: drop-shadow(0 0 16px var(--verde-aurora));
+    transition: transform 4s ease-in-out, stroke 2s ease;
+}
+
+.resp-texto {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 300;
+    color: var(--texto-principal);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    min-height: 2rem;
+    text-align: center;
+}
+
+.resp-fase {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--texto-apagado);
+    letter-spacing: 2px;
+}
+
+/* ============================================================
+   JUEGO: MEMORIA
+   ============================================================ */
+.memoria-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+}
+
+.memoria-info {
+    display: flex;
+    gap: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--texto-apagado);
+    letter-spacing: 1px;
+}
+
+.memoria-info strong {
+    color: var(--morado-vivo);
+}
+
+.memoria-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    max-width: 360px;
+    width: 100%;
+}
+
+/* Carta flip */
+.carta {
+    aspect-ratio: 1;
+    cursor: pointer;
+    perspective: 600px;
+    border-radius: 10px;
+}
+
+.carta-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 10px;
+}
+
+.carta.volteada .carta-inner,
+.carta.encontrada .carta-inner {
+    transform: rotateY(180deg);
+}
+
+.carta-front,
+.carta-back {
+    position: absolute;
+    inset: 0;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backface-visibility: hidden;
+}
+
+.carta-front {
+    background: rgba(91, 33, 182, 0.25);
+    border: 1px solid rgba(199, 125, 255, 0.25);
+    color: var(--texto-apagado);
+    font-size: 1.1rem;
+    font-family: 'JetBrains Mono', monospace;
+    transition: background 0.2s;
+}
+
+.carta:hover:not(.volteada):not(.encontrada) .carta-front {
+    background: rgba(157, 78, 221, 0.2);
+    border-color: rgba(199, 125, 255, 0.4);
+}
+
+.carta-back {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(94, 234, 212, 0.25);
+    font-size: 1.5rem;
+    transform: rotateY(180deg);
+}
+
+.carta.encontrada .carta-back {
+    background: rgba(94, 234, 212, 0.12);
+    border-color: var(--verde-aurora);
+    box-shadow: 0 0 12px rgba(94, 234, 212, 0.2);
+}
+
+.memoria-fin {
+    text-align: center;
+    padding: 16px;
+    background: rgba(94, 234, 212, 0.08);
+    border: 1px solid rgba(94, 234, 212, 0.25);
+    border-radius: 12px;
+    color: var(--verde-aurora);
+    font-size: 0.9rem;
+    width: 100%;
+}
+
+.btn-reiniciar-mem {
+    display: block;
+    margin: 10px auto 0;
+    background: transparent;
+    border: 1px solid var(--verde-aurora);
+    color: var(--verde-aurora);
+    padding: 6px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+}
+
+.btn-reiniciar-mem:hover {
+    background: rgba(94, 234, 212, 0.1);
+    box-shadow: 0 0 10px rgba(94, 234, 212, 0.2);
+}
+
+/* ============================================================
+   BOTÓN ENTRADA al modo estudio (en header principal)
+   ============================================================ */
+.btn-modo-estudio {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: transparent;
+    border: 1px solid rgba(199, 125, 255, 0.3);
+    color: var(--texto-suave);
+    padding: 7px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all 0.25s;
+    margin-top: 12px;
+}
+
+.btn-modo-estudio:hover {
+    background: rgba(94, 234, 212, 0.08);
+    border-color: var(--verde-aurora);
+    color: var(--verde-aurora);
+    box-shadow: 0 0 16px rgba(94, 234, 212, 0.2);
+    transform: translateY(-1px);
+}
+
+/* Jazz player (Spotify iFrame API) */
+.jazz-player-container {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 20px;
+    background: rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid rgba(199, 125, 255, 0.1);
+    animation: fadeInDown 0.3s ease;
+}
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.spotify-embed-wrap {
+    flex: 1;
+    min-width: 0;
+    position: relative;
+}
+
+/* El iframe que inyecta la iFrame API de Spotify */
+.spotify-embed-wrap iframe {
+    border-radius: 10px;
+    display: block;
+    width: 100% !important;
+}
+
+.jazz-cargando {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--texto-apagado);
+    letter-spacing: 1px;
+    padding: 10px 0;
+    text-align: center;
+}
+
+.btn-jazz-offline {
+    background: transparent;
+    border: 1px solid rgba(199, 125, 255, 0.2);
+    color: var(--texto-apagado);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+    title: "Sin internet";
+}
+
+.btn-jazz-offline:hover {
+    border-color: var(--morado-vivo);
+    color: var(--morado-vivo);
+    background: rgba(157, 78, 221, 0.1);
+}
+
+.jazz-offline-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--morado-vivo);
+    letter-spacing: 1px;
+    white-space: nowrap;
+    padding: 8px 0;
+}
+
+/* ============================================================
+   JUEGO: SOPA DE LETRAS
+   ============================================================ */
+.sopa-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.sopa-palabras {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.sopa-pal {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    color: var(--texto-suave);
+    padding: 3px 10px;
+    border-radius: 12px;
+    background: rgba(157, 78, 221, 0.1);
+    border: 1px solid rgba(199, 125, 255, 0.2);
+    transition: all 0.3s;
+}
+
+.sopa-tachada {
+    text-decoration: line-through;
+    color: var(--verde-aurora);
+    background: rgba(94, 234, 212, 0.1);
+    border-color: rgba(94, 234, 212, 0.3);
+}
+
+.sopa-grid {
+    display: grid;
+    gap: 3px;
+    max-width: 340px;
+    width: 100%;
+}
+
+.sopa-cel {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--texto-principal);
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(199, 125, 255, 0.1);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, transform 0.1s;
+    user-select: none;
+}
+
+.sopa-cel:hover {
+    background: rgba(157, 78, 221, 0.18);
+    border-color: rgba(199, 125, 255, 0.35);
+}
+
+.sopa-selec {
+    background: rgba(94, 234, 212, 0.2) !important;
+    border-color: var(--verde-aurora) !important;
+    box-shadow: 0 0 8px rgba(94, 234, 212, 0.3);
+    transform: scale(1.08);
+}
+
+.sopa-hallada {
+    background: rgba(94, 234, 212, 0.15) !important;
+    border-color: rgba(94, 234, 212, 0.4) !important;
+    color: var(--verde-aurora);
+    cursor: default;
+}
+
+.sopa-fin {
+    text-align: center;
+    padding: 14px 20px;
+    background: rgba(94, 234, 212, 0.08);
+    border: 1px solid rgba(94, 234, 212, 0.25);
+    border-radius: 12px;
+    color: var(--verde-aurora);
+    font-size: 0.9rem;
+    width: 100%;
+}
+
+/* ── Scrollbars dentro del modo estudio ── */
+#modo-estudio *::-webkit-scrollbar { width: 5px; }
+#modo-estudio *::-webkit-scrollbar-track { background: transparent; }
+#modo-estudio *::-webkit-scrollbar-thumb {
+    background: rgba(157, 78, 221, 0.3);
+    border-radius: 3px;
+}
+
+/* ── Selector de intensidad de lluvia ── */
+.rain-intensity-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 2px;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+.btn-rain-intensity {
+    background: transparent;
+    border: 1px solid rgba(199, 125, 255, 0.2);
+    color: var(--texto-apagado);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 0;
+    transition: all 0.2s;
+}
+
+.btn-rain-intensity:hover {
+    border-color: rgba(94, 234, 212, 0.5);
+    background: rgba(94, 234, 212, 0.08);
+    transform: scale(1.1);
+}
+
+.btn-rain-intensity.activo {
+    border-color: var(--verde-aurora);
+    background: rgba(94, 234, 212, 0.15);
+    box-shadow: 0 0 8px rgba(94, 234, 212, 0.25);
+    color: var(--texto-principal);
+}
